@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String    @id @default(uuid())
+  username             String    @unique
+  email                String    @unique
+  passwordHash         String    @map("password_hash")
+  rol                  String    @default("operator") // 'admin', 'operator'
+  createdAt            DateTime  @default(now()) @map("created_at")
+  lastLogin            DateTime? @map("last_login")
+
+  @@map("users")
+}
+
+model Client {
+  id                   String         @id @default(uuid())
+  nume                 String
+  numarInmatriculare   String         @unique @map("numar_inmatriculare")
+  numarTelefon         String         @map("numar_telefon")
+  email                String
+  dataExpirareItp      DateTime       @map("data_expirare_itp")
+  createdAt            DateTime       @default(now()) @map("created_at")
+  updatedAt            DateTime       @updatedAt @map("updated_at")
+  activ                Boolean        @default(true)
+
+  notifications        Notification[]
+
+  @@index([dataExpirareItp])
+  @@index([numarInmatriculare])
+  @@map("clients")
+}
+
+model Notification {
+  id              String    @id @default(uuid())
+  clientId        String    @map("client_id")
+  tip             String    // 'SMS' or 'EMAIL'
+  status          String    // 'pending', 'sent', 'failed'
+  mesaj           String?   @db.Text
+  dataTrimitere   DateTime? @map("data_trimitere")
+  eroare          String?   @db.Text
+
+  client          Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@index([status])
+  @@map("notifications")
+}
