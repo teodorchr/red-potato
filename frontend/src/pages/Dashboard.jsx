@@ -96,11 +96,11 @@ export const Dashboard = () => {
               <tbody className="table-body">
                 {stats?.upcomingExpirations?.map((client) => (
                   <tr key={client.id}>
-                    <td className="table-cell font-medium">{client.nume}</td>
+                    <td className="table-cell font-medium">{client.name}</td>
                     <td className="table-cell">
-                      <span className="font-mono">{client.numarInmatriculare}</span>
+                      <span className="font-mono">{client.licensePlate}</span>
                     </td>
-                    <td className="table-cell">{formatDate(client.dataExpirareItp)}</td>
+                    <td className="table-cell">{formatDate(client.itpExpirationDate)}</td>
                     <td className="table-cell">
                       <span className={`badge ${getDaysRemainingClass(client.daysRemaining)}`}>
                         {getDaysRemainingText(client.daysRemaining)}
@@ -133,8 +133,8 @@ export const Dashboard = () => {
                 className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
               >
                 <div>
-                  <p className="font-medium text-gray-900">{client.nume}</p>
-                  <p className="text-sm text-gray-500 font-mono">{client.numarInmatriculare}</p>
+                  <p className="font-medium text-gray-900">{client.name}</p>
+                  <p className="text-sm text-gray-500 font-mono">{client.licensePlate}</p>
                 </div>
                 <div className="text-right text-sm text-gray-500">
                   {formatDate(client.createdAt)}

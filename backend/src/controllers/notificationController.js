@@ -16,7 +16,7 @@ export const getNotifications = async (req, res, next) => {
     const {
       page = 1,
       limit = 20,
-      tip = '',
+      type = '',
       status = '',
       clientId = '',
     } = req.query;
@@ -24,7 +24,7 @@ export const getNotifications = async (req, res, next) => {
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
     const where = {
-      ...(tip && { tip }),
+      ...(type && { type }),
       ...(status && { status }),
       ...(clientId && { clientId }),
     };
@@ -35,13 +35,13 @@ export const getNotifications = async (req, res, next) => {
       where,
       skip,
       take: parseInt(limit),
-      orderBy: { dataTrimitere: 'desc' },
+      orderBy: { sentAt: 'desc' },
       include: {
         client: {
           select: {
             id: true,
-            nume: true,
-            numarInmatriculare: true,
+            name: true,
+            licensePlate: true,
           },
         },
       },
@@ -70,7 +70,7 @@ export const getNotifications = async (req, res, next) => {
  */
 export const sendTestNotification = async (req, res, next) => {
   try {
-    const { clientId, tip } = req.body; // tip: 'SMS', 'EMAIL', or 'BOTH'
+    const { clientId, type } = req.body; // type: 'SMS', 'EMAIL', or 'BOTH'
 
     // Check if client exists
     const client = await prisma.client.findUnique({
@@ -86,12 +86,12 @@ export const sendTestNotification = async (req, res, next) => {
 
     // Calculate days remaining
     const daysRemaining = Math.ceil(
-      (new Date(client.dataExpirareItp) - new Date()) / (1000 * 60 * 60 * 24)
+      (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24)
     );
 
     let result = {};
 
-    switch (tip) {
+    switch (type) {
       case 'SMS':
         result = await sendSMSNotification(client, daysRemaining);
         break;
@@ -132,12 +132,13 @@ export const getStats = async (req, res, next) => {
     // Get recent notifications
     const recentNotifications = await prisma.notification.findMany({
       take: 5,
-      orderBy: { dataTrimitere: 'desc' },
+      orderBy: { sentAt: 'desc' },
       include: {
         client: {
           select: {
-            nume: true,
-            numarInmatriculare: true,
+            name: true,
+            name: true,
+            licensePlate: true,
           },
         },
       },
@@ -165,7 +166,7 @@ export const getClientNotifications = async (req, res, next) => {
 
     const notifications = await prisma.notification.findMany({
       where: { clientId },
-      orderBy: { dataTrimitere: 'desc' },
+      orderBy: { sentAt: 'desc' },
     });
 
     res.json({
@@ -198,8 +199,8 @@ export const retryNotification = async (req, res, next) => {
     }
 
     const daysRemaining = Math.ceil(
-      (new Date(notification.client.dataExpirareItp) - new Date()) /
-        (1000 * 60 * 60 * 24)
+      (new Date(notification.client.itpExpirationDate) - new Date()) /
+      (1000 * 60 * 60 * 24)
     );
 
     let result;

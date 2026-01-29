@@ -19,10 +19,10 @@ export const sendSMSNotification = async (client, daysRemaining) => {
     await prisma.notification.create({
       data: {
         clientId: client.id,
-        tip: 'SMS',
+        type: 'SMS',
         status: 'sent',
-        mesaj: message,
-        dataTrimitere: new Date(),
+        message: message,
+        sentAt: new Date(),
       },
     });
 
@@ -32,10 +32,10 @@ export const sendSMSNotification = async (client, daysRemaining) => {
     await prisma.notification.create({
       data: {
         clientId: client.id,
-        tip: 'SMS',
+        type: 'SMS',
         status: 'failed',
-        mesaj: message,
-        eroare: error.message,
+        message: message,
+        error: error.message,
       },
     });
 
@@ -63,10 +63,10 @@ export const sendEmailNotification = async (client, daysRemaining) => {
     await prisma.notification.create({
       data: {
         clientId: client.id,
-        tip: 'EMAIL',
+        type: 'EMAIL',
         status: 'sent',
-        mesaj: subject,
-        dataTrimitere: new Date(),
+        message: subject,
+        sentAt: new Date(),
       },
     });
 
@@ -76,10 +76,10 @@ export const sendEmailNotification = async (client, daysRemaining) => {
     await prisma.notification.create({
       data: {
         clientId: client.id,
-        tip: 'EMAIL',
+        type: 'EMAIL',
         status: 'failed',
-        mesaj: subject,
-        eroare: error.message,
+        message: subject,
+        error: error.message,
       },
     });
 
@@ -105,7 +105,7 @@ export const sendBothNotifications = async (client, daysRemaining) => {
     results.sms.success = true;
   } catch (error) {
     results.sms.error = error.message;
-    console.error(`Failed to send SMS to ${client.nume}:`, error.message);
+    console.error(`Failed to send SMS to ${client.name}:`, error.message);
   }
 
   // Send Email
@@ -114,7 +114,7 @@ export const sendBothNotifications = async (client, daysRemaining) => {
     results.email.success = true;
   } catch (error) {
     results.email.error = error.message;
-    console.error(`Failed to send Email to ${client.nume}:`, error.message);
+    console.error(`Failed to send Email to ${client.name}:`, error.message);
   }
 
   return results;
@@ -128,7 +128,7 @@ export const sendBothNotifications = async (client, daysRemaining) => {
 export const getClientNotifications = async (clientId) => {
   return await prisma.notification.findMany({
     where: { clientId },
-    orderBy: { dataTrimitere: 'desc' },
+    orderBy: { sentAt: 'desc' },
   });
 };
 
@@ -142,8 +142,8 @@ export const getNotificationStats = async () => {
   const failed = await prisma.notification.count({ where: { status: 'failed' } });
   const pending = await prisma.notification.count({ where: { status: 'pending' } });
 
-  const smsCount = await prisma.notification.count({ where: { tip: 'SMS' } });
-  const emailCount = await prisma.notification.count({ where: { tip: 'EMAIL' } });
+  const smsCount = await prisma.notification.count({ where: { type: 'SMS' } });
+  const emailCount = await prisma.notification.count({ where: { type: 'EMAIL' } });
 
   return {
     total,

@@ -27,7 +27,7 @@ export const getDashboardStats = async (req, res, next) => {
     const expiredCount = await prisma.client.count({
       where: {
         activ: true,
-        dataExpirareItp: {
+        itpExpirationDate: {
           lt: today,
         },
       },
@@ -37,7 +37,7 @@ export const getDashboardStats = async (req, res, next) => {
     const expiringSoonCount = await prisma.client.count({
       where: {
         activ: true,
-        dataExpirareItp: {
+        itpExpirationDate: {
           gte: today,
           lte: sevenDaysLater,
         },
@@ -48,7 +48,7 @@ export const getDashboardStats = async (req, res, next) => {
     const expiringThirtyDaysCount = await prisma.client.count({
       where: {
         activ: true,
-        dataExpirareItp: {
+        itpExpirationDate: {
           gte: today,
           lte: thirtyDaysLater,
         },
@@ -62,7 +62,7 @@ export const getDashboardStats = async (req, res, next) => {
     const notificationsSentToday = await prisma.notification.count({
       where: {
         status: 'sent',
-        dataTrimitere: {
+        sentAt: {
           gte: startOfToday,
         },
       },
@@ -72,7 +72,7 @@ export const getDashboardStats = async (req, res, next) => {
     const notificationsFailedToday = await prisma.notification.count({
       where: {
         status: 'failed',
-        dataTrimitere: {
+        sentAt: {
           gte: startOfToday,
         },
       },
@@ -85,9 +85,9 @@ export const getDashboardStats = async (req, res, next) => {
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
-        nume: true,
-        numarInmatriculare: true,
-        dataExpirareItp: true,
+        name: true,
+        licensePlate: true,
+        itpExpirationDate: true,
         createdAt: true,
       },
     });
@@ -96,18 +96,18 @@ export const getDashboardStats = async (req, res, next) => {
     const upcomingExpirations = await prisma.client.findMany({
       where: {
         activ: true,
-        dataExpirareItp: {
+        itpExpirationDate: {
           gte: today,
           lte: sevenDaysLater,
         },
       },
-      orderBy: { dataExpirareItp: 'asc' },
+      orderBy: { itpExpirationDate: 'asc' },
       select: {
         id: true,
-        nume: true,
-        numarInmatriculare: true,
-        dataExpirareItp: true,
-        numarTelefon: true,
+        name: true,
+        licensePlate: true,
+        itpExpirationDate: true,
+        phoneNumber: true,
         email: true,
       },
     });
@@ -116,7 +116,7 @@ export const getDashboardStats = async (req, res, next) => {
     const upcomingWithDays = upcomingExpirations.map((client) => ({
       ...client,
       daysRemaining: Math.ceil(
-        (new Date(client.dataExpirareItp) - new Date()) / (1000 * 60 * 60 * 24)
+        (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24)
       ),
     }));
 

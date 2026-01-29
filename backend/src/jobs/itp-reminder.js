@@ -59,7 +59,7 @@ export const checkAndNotifyExpiringITP = async () => {
         const notificationSentToday = await prisma.notification.findFirst({
           where: {
             clientId: client.id,
-            dataTrimitere: {
+            sentAt: {
               gte: getStartOfDay(today),
               lte: getEndOfDay(today),
             },
@@ -68,9 +68,9 @@ export const checkAndNotifyExpiringITP = async () => {
         });
 
         if (notificationSentToday) {
-          console.log(`⏭️  Skipping ${client.nume} - Already notified today`);
+          console.log(`⏭️  Skipping ${client.name} - Already notified today`);
           results.push({
-            client: client.nume,
+            client: client.name,
             status: 'skipped',
             reason: 'Already notified today',
           });
@@ -79,11 +79,11 @@ export const checkAndNotifyExpiringITP = async () => {
 
         // Calculate days remaining until expiration
         const daysRemaining = Math.ceil(
-          (new Date(client.dataExpirareItp) - today) / (1000 * 60 * 60 * 24)
+          (new Date(client.itpExpirationDate) - today) / (1000 * 60 * 60 * 24)
         );
 
         console.log(
-          `📤 Sending notifications to ${client.nume} (${client.numarInmatriculare}) - ${daysRemaining} days remaining`
+          `📤 Sending notifications to ${client.name} (${client.licensePlate}) - ${daysRemaining} days remaining`
         );
 
         // Send both notifications (SMS and Email)
@@ -95,17 +95,17 @@ export const checkAndNotifyExpiringITP = async () => {
         if (success) {
           successCount++;
           results.push({
-            client: client.nume,
+            client: client.name,
             status: 'success',
             daysRemaining,
             sms: notificationResults.sms.success ? 'sent' : 'failed',
             email: notificationResults.email.success ? 'sent' : 'failed',
           });
-          console.log(`✅ Successfully sent notifications to ${client.nume}`);
+          console.log(`✅ Successfully sent notifications to ${client.name}`);
         } else {
           failureCount++;
           results.push({
-            client: client.nume,
+            client: client.name,
             status: 'failed',
             daysRemaining,
             errors: {
@@ -113,16 +113,20 @@ export const checkAndNotifyExpiringITP = async () => {
               email: notificationResults.email.error,
             },
           });
-          console.error(`❌ Failed to send notifications to ${client.nume}`);
+          console.error(`❌ Failed to send notifications to ${client.name}`);
+          results.failed.push({
+            client: client.name,
+            error: 'Failed to send both SMS and Email',
+          });
         }
 
         // Short pause between notifications to avoid rate limiting
         await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (error) {
         failureCount++;
-        console.error(`❌ Error processing client ${client.nume}:`, error.message);
+        console.error(`❌ Error processing client ${client.name}:`, error.message);
         results.push({
-          client: client.nume,
+          client: client.name,
           status: 'error',
           error: error.message,
         });

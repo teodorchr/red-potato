@@ -97,7 +97,7 @@ export const Clients = () => {
                             <Edit className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() => handleDelete(client.id, client.nume)}
+                            onClick={() => handleDelete(client.id, client.name)}
                             className="p-2 text-red-600 hover:bg-red-50 rounded"
                             title="Delete"
                           >

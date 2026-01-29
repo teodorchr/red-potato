@@ -47,22 +47,22 @@ export const getEndOfDay = (date = new Date()) => {
  * Generate ITP reminder message
  */
 export const generateItpReminderMessage = (client, daysRemaining) => {
-  const { nume, numarInmatriculare, dataExpirareItp } = client;
-  const formattedDate = formatDate(dataExpirareItp);
+  const { name, licensePlate, itpExpirationDate } = client;
+  const formattedDate = formatDate(itpExpirationDate);
 
   if (daysRemaining <= 0) {
-    return `Hello ${nume}! ITP for vehicle ${numarInmatriculare} expired on ${formattedDate}. Please urgently schedule a new inspection at our service.`;
+    return `Hello ${name}! ITP for vehicle ${licensePlate} expired on ${formattedDate}. Please urgently schedule a new inspection at our service.`;
   }
 
-  return `Hello ${nume}! ITP for vehicle ${numarInmatriculare} expires in ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} (${formattedDate}). Please schedule a new inspection at our service.`;
+  return `Hello ${name}! ITP for vehicle ${licensePlate} expires in ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} (${formattedDate}). Please schedule a new inspection at our service.`;
 };
 
 /**
  * Generate HTML template for email
  */
 export const generateEmailTemplate = (client, daysRemaining) => {
-  const { nume, numarInmatriculare, dataExpirareItp } = client;
-  const formattedDate = formatDate(dataExpirareItp);
+  const { name, licensePlate, itpExpirationDate } = client;
+  const formattedDate = formatDate(itpExpirationDate);
   const urgency = daysRemaining <= 3 ? 'urgent' : 'normal';
   const color = urgency === 'urgent' ? '#ef4444' : '#f59e0b';
 
@@ -87,21 +87,21 @@ export const generateEmailTemplate = (client, daysRemaining) => {
       <h1>🚗 ITP Reminder</h1>
     </div>
     <div class="content">
-      <p>Hello <strong>${nume}</strong>,</p>
+      <p>Hello <strong>${name}</strong>,</p>
 
       <div class="highlight">
         <p>We inform you that the ITP for your vehicle:</p>
         <ul>
-          <li><strong>Registration number:</strong> ${numarInmatriculare}</li>
+          <li><strong>Registration number:</strong> ${licensePlate}</li>
           <li><strong>Expiration date:</strong> ${formattedDate}</li>
           <li><strong>Time remaining:</strong> ${daysRemaining <= 0 ? 'EXPIRED' : `${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'}`}</li>
         </ul>
       </div>
 
       ${daysRemaining <= 0
-        ? '<p style="color: #ef4444; font-weight: bold;">⚠️ WARNING: Your ITP has expired! Driving with expired ITP is illegal and may result in penalties.</p>'
-        : '<p>Please schedule a new periodic technical inspection as soon as possible.</p>'
-      }
+      ? '<p style="color: #ef4444; font-weight: bold;">⚠️ WARNING: Your ITP has expired! Driving with expired ITP is illegal and may result in penalties.</p>'
+      : '<p>Please schedule a new periodic technical inspection as soon as possible.</p>'
+    }
 
       <p><strong>Service contact:</strong><br>
       📞 Phone: 0722-XXX-XXX<br>

@@ -12,7 +12,7 @@ export const getClients = async (req, res, next) => {
       page = 1,
       limit = 10,
       search = '',
-      sortBy = 'dataExpirareItp',
+      sortBy = 'itpExpirationDate',
       sortOrder = 'asc',
       activ = 'true',
     } = req.query;
@@ -24,8 +24,8 @@ export const getClients = async (req, res, next) => {
       activ: activ === 'true',
       ...(search && {
         OR: [
-          { nume: { contains: search, mode: 'insensitive' } },
-          { numarInmatriculare: { contains: search, mode: 'insensitive' } },
+          { name: { contains: search, mode: 'insensitive' } },
+          { licensePlate: { contains: search, mode: 'insensitive' } },
           { email: { contains: search, mode: 'insensitive' } },
           { numarTelefon: { contains: search } },
         ],
@@ -47,7 +47,7 @@ export const getClients = async (req, res, next) => {
     const clientsWithDaysRemaining = clients.map((client) => ({
       ...client,
       daysRemaining: Math.ceil(
-        (new Date(client.dataExpirareItp) - new Date()) / (1000 * 60 * 60 * 24)
+        (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24)
       ),
     }));
 
@@ -80,7 +80,7 @@ export const getClientById = async (req, res, next) => {
       where: { id },
       include: {
         notifications: {
-          orderBy: { dataTrimitere: 'desc' },
+          orderBy: { sentAt: 'desc' },
           take: 10,
         },
       },
@@ -95,7 +95,7 @@ export const getClientById = async (req, res, next) => {
 
     // Add days remaining
     const daysRemaining = Math.ceil(
-      (new Date(client.dataExpirareItp) - new Date()) / (1000 * 60 * 60 * 24)
+      (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24)
     );
 
     res.json({
@@ -116,15 +116,15 @@ export const getClientById = async (req, res, next) => {
  */
 export const createClient = async (req, res, next) => {
   try {
-    const { nume, numarInmatriculare, numarTelefon, email, dataExpirareItp } = req.body;
+    const { name, licensePlate, phoneNumber, email, itpExpirationDate } = req.body;
 
     const client = await prisma.client.create({
       data: {
-        nume,
-        numarInmatriculare: numarInmatriculare.toUpperCase(),
-        numarTelefon,
+        name,
+        licensePlate: licensePlate.toUpperCase(),
+        phoneNumber,
         email,
-        dataExpirareItp: new Date(dataExpirareItp),
+        itpExpirationDate: new Date(itpExpirationDate),
       },
     });
 
@@ -145,7 +145,7 @@ export const createClient = async (req, res, next) => {
 export const updateClient = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { nume, numarInmatriculare, numarTelefon, email, dataExpirareItp, activ } = req.body;
+    const { name, licensePlate, phoneNumber, email, itpExpirationDate, active } = req.body;
 
     // Check if client exists
     const existingClient = await prisma.client.findUnique({ where: { id } });
@@ -159,14 +159,14 @@ export const updateClient = async (req, res, next) => {
 
     // Build update object
     const updateData = {};
-    if (nume !== undefined) updateData.nume = nume;
-    if (numarInmatriculare !== undefined)
-      updateData.numarInmatriculare = numarInmatriculare.toUpperCase();
-    if (numarTelefon !== undefined) updateData.numarTelefon = numarTelefon;
+    if (name !== undefined) updateData.name = name;
+    if (licensePlate !== undefined)
+      updateData.licensePlate = licensePlate.toUpperCase();
+    if (phoneNumber !== undefined) updateData.phoneNumber = phoneNumber;
     if (email !== undefined) updateData.email = email;
-    if (dataExpirareItp !== undefined)
-      updateData.dataExpirareItp = new Date(dataExpirareItp);
-    if (activ !== undefined) updateData.activ = activ;
+    if (itpExpirationDate !== undefined)
+      updateData.itpExpirationDate = new Date(itpExpirationDate);
+    if (active !== undefined) updateData.active = active;
 
     const client = await prisma.client.update({
       where: { id },
@@ -234,19 +234,19 @@ export const getExpiringClients = async (req, res, next) => {
     const clients = await prisma.client.findMany({
       where: {
         activ: true,
-        dataExpirareItp: {
+        itpExpirationDate: {
           gte: today,
           lte: futureDate,
         },
       },
-      orderBy: { dataExpirareItp: 'asc' },
+      orderBy: { itpExpirationDate: 'asc' },
     });
 
     // Add days remaining for each client
     const clientsWithDaysRemaining = clients.map((client) => ({
       ...client,
       daysRemaining: Math.ceil(
-        (new Date(client.dataExpirareItp) - new Date()) / (1000 * 60 * 60 * 24)
+        (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24)
       ),
     }));
 

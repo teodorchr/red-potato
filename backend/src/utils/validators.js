@@ -2,15 +2,15 @@ import { z } from 'zod';
 
 // Schema for client registration
 export const clientSchema = z.object({
-  nume: z.string().min(2, 'Name must have at least 2 characters').max(255),
-  numarInmatriculare: z.string()
+  name: z.string().min(2, 'Name must have at least 2 characters').max(255),
+  licensePlate: z.string()
     .min(5, 'Invalid registration number')
     .max(20)
     .regex(/^[A-Z]{1,2}-\d{2,3}-[A-Z]{3}$/, 'Invalid registration number format (e.g., B-123-ABC)'),
-  numarTelefon: z.string()
+  phoneNumber: z.string()
     .regex(/^\+?[0-9]{10,15}$/, 'Invalid phone number'),
   email: z.string().email('Invalid email'),
-  dataExpirareItp: z.string().or(z.date()),
+  itpExpirationDate: z.string().or(z.date()),
 });
 
 // Schema for client update

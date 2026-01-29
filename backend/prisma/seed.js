@@ -38,49 +38,49 @@ async function main() {
   const today = new Date();
   const clientsData = [
     {
-      nume: 'Popescu Ion',
-      numarInmatriculare: 'B-123-ABC',
-      numarTelefon: '+40722111222',
+      name: 'Popescu Ion',
+      licensePlate: 'B-123-ABC',
+      phoneNumber: '+40722111222',
       email: 'ion.popescu@example.com',
-      dataExpirareItp: new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000), // 3 days
+      itpExpirationDate: new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000), // 3 days
     },
     {
-      nume: 'Ionescu Maria',
-      numarInmatriculare: 'B-456-DEF',
-      numarTelefon: '+40722333444',
+      name: 'Ionescu Maria',
+      licensePlate: 'B-456-DEF',
+      phoneNumber: '+40722333444',
       email: 'maria.ionescu@example.com',
-      dataExpirareItp: new Date(today.getTime() + 5 * 24 * 60 * 60 * 1000), // 5 days
+      itpExpirationDate: new Date(today.getTime() + 5 * 24 * 60 * 60 * 1000), // 5 days
     },
     {
-      nume: 'Dumitrescu George',
-      numarInmatriculare: 'B-789-GHI',
-      numarTelefon: '+40722555666',
+      name: 'Dumitrescu George',
+      licensePlate: 'B-789-GHI',
+      phoneNumber: '+40722555666',
       email: 'george.dumitrescu@example.com',
-      dataExpirareItp: new Date(today.getTime() + 10 * 24 * 60 * 60 * 1000), // 10 days
+      itpExpirationDate: new Date(today.getTime() + 10 * 24 * 60 * 60 * 1000), // 10 days
     },
     {
-      nume: 'Popa Ana',
-      numarInmatriculare: 'B-321-JKL',
-      numarTelefon: '+40722777888',
+      name: 'Popa Ana',
+      licensePlate: 'B-321-JKL',
+      phoneNumber: '+40722777888',
       email: 'ana.popa@example.com',
-      dataExpirareItp: new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000), // 30 days
+      itpExpirationDate: new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000), // 30 days
     },
     {
-      nume: 'Stanescu Mihai',
-      numarInmatriculare: 'B-654-MNO',
-      numarTelefon: '+40722999000',
+      name: 'Stanescu Mihai',
+      licensePlate: 'B-654-MNO',
+      phoneNumber: '+40722999000',
       email: 'mihai.stanescu@example.com',
-      dataExpirareItp: new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000), // Expired 2 days ago
+      itpExpirationDate: new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000), // Expired 2 days ago
     },
   ];
 
   for (const clientData of clientsData) {
     const client = await prisma.client.upsert({
-      where: { numarInmatriculare: clientData.numarInmatriculare },
+      where: { licensePlate: clientData.licensePlate },
       update: {},
       create: clientData,
     });
-    console.log('✅ Client created:', client.nume, '-', client.numarInmatriculare);
+    console.log('✅ Client created:', client.name, '-', client.licensePlate);
   }
 
   console.log('🎉 Database seeding completed!');

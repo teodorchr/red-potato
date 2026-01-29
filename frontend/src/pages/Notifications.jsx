@@ -7,7 +7,7 @@ export const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState({ tip: '', status: '' });
+  const [filter, setFilter] = useState({ type: '', status: '' });
 
   useEffect(() => {
     fetchData();
@@ -66,8 +66,8 @@ export const Notifications = () => {
         <div className="flex items-center gap-4">
           <Filter className="w-5 h-5 text-gray-500" />
           <select
-            value={filter.tip}
-            onChange={(e) => handleFilterChange('tip', e.target.value)}
+            value={filter.type}
+            onChange={(e) => handleFilterChange('type', e.target.value)}
             className="input w-48"
           >
             <option value="">All types</option>
@@ -112,15 +112,15 @@ export const Notifications = () => {
                   <tr key={notification.id}>
                     <td className="table-cell">
                       <div>
-                        <div className="font-medium">{notification.client.nume}</div>
+                        <div className="font-medium">{notification.client.name}</div>
                         <div className="text-sm text-gray-500 font-mono">
-                          {notification.client.numarInmatriculare}
+                          {notification.client.licensePlate}
                         </div>
                       </div>
                     </td>
                     <td className="table-cell">
                       <span className="badge badge-info">
-                        {formatNotificationType(notification.tip)}
+                        {formatNotificationType(notification.type)}
                       </span>
                     </td>
                     <td className="table-cell">
@@ -128,9 +128,9 @@ export const Notifications = () => {
                         {formatNotificationStatus(notification.status)}
                       </span>
                     </td>
-                    <td className="table-cell max-w-md truncate">{notification.mesaj}</td>
+                    <td className="table-cell max-w-md truncate">{notification.message}</td>
                     <td className="table-cell whitespace-nowrap">
-                      {formatDateTime(notification.dataTrimitere)}
+                      {formatDateTime(notification.sentAt)}
                     </td>
                   </tr>
                 ))}

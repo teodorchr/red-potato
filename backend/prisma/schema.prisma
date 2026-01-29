@@ -25,30 +25,30 @@ model User {
 
 model Client {
   id                   String         @id @default(uuid())
-  nume                 String
-  numarInmatriculare   String         @unique @map("numar_inmatriculare")
-  numarTelefon         String         @map("numar_telefon")
+  name                 String         @map("nume")
+  licensePlate         String         @unique @map("numar_inmatriculare")
+  phoneNumber          String         @map("numar_telefon")
   email                String
-  dataExpirareItp      DateTime       @map("data_expirare_itp")
+  itpExpirationDate    DateTime       @map("data_expirare_itp")
   createdAt            DateTime       @default(now()) @map("created_at")
   updatedAt            DateTime       @updatedAt @map("updated_at")
-  activ                Boolean        @default(true)
+  active               Boolean        @default(true) @map("activ")
 
   notifications        Notification[]
 
-  @@index([dataExpirareItp])
-  @@index([numarInmatriculare])
+  @@index([itpExpirationDate])
+  @@index([licensePlate])
   @@map("clients")
 }
 
 model Notification {
   id              String    @id @default(uuid())
   clientId        String    @map("client_id")
-  tip             String    // 'SMS' or 'EMAIL'
+  type            String    @map("tip") // 'SMS' or 'EMAIL'
   status          String    // 'pending', 'sent', 'failed'
-  mesaj           String?   @db.Text
-  dataTrimitere   DateTime? @map("data_trimitere")
-  eroare          String?   @db.Text
+  message         String?   @db.Text @map("mesaj")
+  sentAt          DateTime? @map("data_trimitere")
+  error           String?   @db.Text @map("eroare")
 
   client          Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
 

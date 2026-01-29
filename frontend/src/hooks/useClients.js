@@ -16,7 +16,7 @@ export const useClients = (initialParams = {}) => {
     page: 1,
     limit: 10,
     search: '',
-    sortBy: 'dataExpirareItp',
+    sortBy: 'itpExpirationDate',
     sortOrder: 'asc',
     activ: 'true',
     ...initialParams,

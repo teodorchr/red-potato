@@ -14,11 +14,11 @@ export const ClientForm = () => {
 
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    nume: '',
-    numarInmatriculare: '',
-    numarTelefon: '',
+    name: '',
+    licensePlate: '',
+    phoneNumber: '',
     email: '',
-    dataExpirareItp: '',
+    itpExpirationDate: '',
   });
   const [errors, setErrors] = useState({});
 
@@ -32,11 +32,11 @@ export const ClientForm = () => {
     try {
       const client = await clientService.getClientById(id);
       setFormData({
-        nume: client.nume,
-        numarInmatriculare: client.numarInmatriculare,
-        numarTelefon: client.numarTelefon,
+        name: client.name,
+        licensePlate: client.licensePlate,
+        phoneNumber: client.phoneNumber,
         email: client.email,
-        dataExpirareItp: client.dataExpirareItp.split('T')[0],
+        itpExpirationDate: client.itpExpirationDate.split('T')[0],
       });
     } catch (error) {
       toast.error('Error loading client');
@@ -63,8 +63,8 @@ export const ClientForm = () => {
 
     const submitData = {
       ...formData,
-      numarInmatriculare: normalizePlateNumber(formData.numarInmatriculare),
-      numarTelefon: normalizePhoneNumber(formData.numarTelefon),
+      licensePlate: normalizePlateNumber(formData.licensePlate),
+      phoneNumber: normalizePhoneNumber(formData.phoneNumber),
     };
 
     setLoading(true);
