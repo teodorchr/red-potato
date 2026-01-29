@@ -108,7 +108,7 @@ export const Dashboard = () => {
                     </td>
                     <td className="table-cell">
                       <div className="text-sm">
-                        <div>{client.numarTelefon}</div>
+                        <div>{client.phoneNumber}</div>
                         <div className="text-gray-500">{client.email}</div>
                       </div>
                     </td>

@@ -79,7 +79,13 @@ export const ClientForm = () => {
       }
       navigate('/clients');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error saving');
+      console.error('Error saving client:', error);
+      if (error.response?.data) {
+        console.error('Validation details:', error.response.data);
+      }
+      const errorMessage = error.response?.data?.message || 'Error saving';
+      toast.error(errorMessage);
+      setErrors({ form: errorMessage }); // Show error in UI as well if possible, or just rely on toast
     } finally {
       setLoading(false);
     }
@@ -103,33 +109,33 @@ export const ClientForm = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input
             label="Name"
-            name="nume"
+            name="name"
             required
-            value={formData.nume}
+            value={formData.name}
             onChange={handleChange}
-            error={errors.nume}
+            error={errors.name}
             placeholder="John Doe"
           />
 
           <Input
             label="License Plate Number"
-            name="numarInmatriculare"
+            name="licensePlate"
             required
-            value={formData.numarInmatriculare}
+            value={formData.licensePlate}
             onChange={handleChange}
-            error={errors.numarInmatriculare}
+            error={errors.licensePlate}
             placeholder="B-123-ABC"
             className="uppercase"
           />
 
           <Input
             label="Phone Number"
-            name="numarTelefon"
+            name="phoneNumber"
             type="tel"
             required
-            value={formData.numarTelefon}
+            value={formData.phoneNumber}
             onChange={handleChange}
-            error={errors.numarTelefon}
+            error={errors.phoneNumber}
             placeholder="+40722123456 or 0722123456"
           />
 
@@ -146,12 +152,12 @@ export const ClientForm = () => {
 
           <Input
             label="ITP Expiration Date"
-            name="dataExpirareItp"
+            name="itpExpirationDate"
             type="date"
             required
-            value={formData.dataExpirareItp}
+            value={formData.itpExpirationDate}
             onChange={handleChange}
-            error={errors.dataExpirareItp}
+            error={errors.itpExpirationDate}
           />
 
           <div className="flex gap-4">

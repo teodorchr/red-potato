@@ -65,20 +65,20 @@ export const normalizePlateNumber = (plate) => {
 export const validateClientForm = (data) => {
   const errors = {};
 
-  if (!data.nume || data.nume.trim().length < 2) {
-    errors.nume = 'Name must be at least 2 characters long';
+  if (!data.name || data.name.trim().length < 2) {
+    errors.name = 'Name must be at least 2 characters long';
   }
 
-  if (!data.numarInmatriculare) {
-    errors.numarInmatriculare = 'License plate number is required';
-  } else if (!isValidPlateNumber(data.numarInmatriculare)) {
-    errors.numarInmatriculare = 'Invalid format (ex: B-123-ABC)';
+  if (!data.licensePlate) {
+    errors.licensePlate = 'License plate number is required';
+  } else if (!isValidPlateNumber(data.licensePlate)) {
+    errors.licensePlate = 'Invalid format (ex: B-123-ABC)';
   }
 
-  if (!data.numarTelefon) {
-    errors.numarTelefon = 'Phone number is required';
-  } else if (!isValidPhoneNumber(data.numarTelefon)) {
-    errors.numarTelefon = 'Invalid phone number';
+  if (!data.phoneNumber) {
+    errors.phoneNumber = 'Phone number is required';
+  } else if (!isValidPhoneNumber(data.phoneNumber)) {
+    errors.phoneNumber = 'Invalid phone number';
   }
 
   if (!data.email) {
@@ -87,8 +87,8 @@ export const validateClientForm = (data) => {
     errors.email = 'Invalid email';
   }
 
-  if (!data.dataExpirareItp) {
-    errors.dataExpirareItp = 'ITP expiration date is required';
+  if (!data.itpExpirationDate) {
+    errors.itpExpirationDate = 'ITP expiration date is required';
   }
 
   return {

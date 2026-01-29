@@ -75,13 +75,13 @@ export const Clients = () => {
                 <tbody className="table-body">
                   {clients.map((client) => (
                     <tr key={client.id}>
-                      <td className="table-cell font-medium">{client.nume}</td>
+                      <td className="table-cell font-medium">{client.name}</td>
                       <td className="table-cell">
-                        <span className="font-mono">{client.numarInmatriculare}</span>
+                        <span className="font-mono">{client.licensePlate}</span>
                       </td>
-                      <td className="table-cell">{client.numarTelefon}</td>
+                      <td className="table-cell">{client.phoneNumber}</td>
                       <td className="table-cell text-sm">{client.email}</td>
-                      <td className="table-cell">{formatDate(client.dataExpirareItp)}</td>
+                      <td className="table-cell">{formatDate(client.itpExpirationDate)}</td>
                       <td className="table-cell">
                         <span className={`badge ${getDaysRemainingClass(client.daysRemaining)}`}>
                           {getDaysRemainingText(client.daysRemaining)}
