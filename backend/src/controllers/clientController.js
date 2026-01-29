@@ -21,7 +21,7 @@ export const getClients = async (req, res, next) => {
 
     // Build search conditions
     const where = {
-      activ: activ === 'true',
+      active: activ === 'true',
       ...(search && {
         OR: [
           { name: { contains: search, mode: 'insensitive' } },
@@ -204,7 +204,7 @@ export const deleteClient = async (req, res, next) => {
     // Soft delete
     await prisma.client.update({
       where: { id },
-      data: { activ: false },
+      data: { active: false },
     });
 
     res.json({
@@ -233,7 +233,7 @@ export const getExpiringClients = async (req, res, next) => {
 
     const clients = await prisma.client.findMany({
       where: {
-        activ: true,
+        active: true,
         itpExpirationDate: {
           gte: today,
           lte: futureDate,

@@ -20,13 +20,13 @@ export const getDashboardStats = async (req, res, next) => {
 
     // Total active clients
     const totalClients = await prisma.client.count({
-      where: { activ: true },
+      where: { active: true },
     });
 
     // Clients with expired ITP
     const expiredCount = await prisma.client.count({
       where: {
-        activ: true,
+        active: true,
         itpExpirationDate: {
           lt: today,
         },
@@ -36,7 +36,7 @@ export const getDashboardStats = async (req, res, next) => {
     // Clients with ITP expiring in the next 7 days
     const expiringSoonCount = await prisma.client.count({
       where: {
-        activ: true,
+        active: true,
         itpExpirationDate: {
           gte: today,
           lte: sevenDaysLater,
@@ -47,7 +47,7 @@ export const getDashboardStats = async (req, res, next) => {
     // Clients with ITP expiring in the next 30 days
     const expiringThirtyDaysCount = await prisma.client.count({
       where: {
-        activ: true,
+        active: true,
         itpExpirationDate: {
           gte: today,
           lte: thirtyDaysLater,
@@ -80,7 +80,7 @@ export const getDashboardStats = async (req, res, next) => {
 
     // Recently added clients
     const recentClients = await prisma.client.findMany({
-      where: { activ: true },
+      where: { active: true },
       take: 5,
       orderBy: { createdAt: 'desc' },
       select: {
@@ -95,7 +95,7 @@ export const getDashboardStats = async (req, res, next) => {
     // Clients with upcoming expiration (next 7 days)
     const upcomingExpirations = await prisma.client.findMany({
       where: {
-        activ: true,
+        active: true,
         itpExpirationDate: {
           gte: today,
           lte: sevenDaysLater,

@@ -26,7 +26,7 @@ export const checkAndNotifyExpiringITP = async () => {
     // Find all cars with ITP expiring in the next N days
     const expiringClients = await prisma.client.findMany({
       where: {
-        activ: true,
+        active: true,
         dataExpirareItp: {
           gte: getStartOfDay(today),
           lte: getEndOfDay(futureDate),
