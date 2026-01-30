@@ -28,6 +28,7 @@ export const ClientForm = () => {
     if (isEdit) {
       loadClient();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const loadClient = async () => {
@@ -40,7 +41,7 @@ export const ClientForm = () => {
         email: client.email,
         itpExpirationDate: client.itpExpirationDate.split('T')[0],
       });
-    } catch (_error) {
+    } catch {
       toast.error(t('clients.errorLoading'));
       navigate('/clients');
     }

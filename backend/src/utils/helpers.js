@@ -119,10 +119,7 @@ export const generateEmailTemplate = (client, daysRemaining, locale = 'ro') => {
         </ul>
       </div>
 
-      ${daysRemaining <= 0
-        ? `<p style="color: #ef4444; font-weight: bold;">${t.warningExpired}</p>`
-        : `<p>${t.scheduleMessage}</p>`
-      }
+      ${daysRemaining <= 0 ? `<p style="color: #ef4444; font-weight: bold;">${t.warningExpired}</p>` : `<p>${t.scheduleMessage}</p>`}
 
       <p><strong>${t.contactTitle}:</strong><br>
       ${t.phone}: 0722-XXX-XXX<br>

@@ -13,7 +13,7 @@ export const formatDate = (date) => {
   if (!date) return '-';
   try {
     return format(parseISO(date), 'dd.MM.yyyy', { locale: getLocale() });
-  } catch (_error) {
+  } catch {
     return '-';
   }
 };
@@ -25,7 +25,7 @@ export const formatDateTime = (date) => {
   if (!date) return '-';
   try {
     return format(parseISO(date), 'dd.MM.yyyy HH:mm', { locale: getLocale() });
-  } catch (_error) {
+  } catch {
     return '-';
   }
 };
@@ -40,7 +40,7 @@ export const formatRelativeTime = (date) => {
       addSuffix: true,
       locale: getLocale(),
     });
-  } catch (_error) {
+  } catch {
     return '-';
   }
 };

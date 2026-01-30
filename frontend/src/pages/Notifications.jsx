@@ -13,6 +13,7 @@ export const Notifications = () => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
   const fetchData = async () => {
