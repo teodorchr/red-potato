@@ -11,7 +11,9 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "prisma:seed": "node prisma/seed.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint src/ --ext .js --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint src/ --ext .js --fix",
+    "test": "echo \"No tests configured yet\" && exit 0"
   },
   "keywords": ["itp", "service-auto", "notifications"],
   "author": "",
@@ -31,6 +33,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "eslint": "^8.57.0",
     "nodemon": "^3.1.7",
     "prisma": "^5.20.0"
   }

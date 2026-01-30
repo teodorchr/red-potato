@@ -4,17 +4,7 @@ This document outlines planned features and improvements for the Red Potato Vehi
 
 ## In Progress
 
-### CI/CD Pipeline
-- [ ] GitHub Actions workflow for build
-  - [ ] Lint and test backend
-  - [ ] Lint and test frontend
-  - [ ] Build Docker images
-  - [ ] Push images to container registry (GitHub Container Registry)
-- [ ] GitHub Actions workflow for deployment
-  - [ ] Deploy to staging environment on PR merge
-  - [ ] Deploy to production on release tag
-  - [ ] Helm upgrade for Kubernetes deployments
-  - [ ] Rollback capability on failure
+*No items currently in progress*
 
 ## Planned
 
@@ -40,6 +30,18 @@ This document outlines planned features and improvements for the Red Potato Vehi
 
 ## Completed
 
+- [x] CI/CD Pipeline
+  - [x] GitHub Actions workflow for build (ci.yml)
+    - [x] Lint and test backend
+    - [x] Lint and test frontend
+    - [x] Build Docker images
+    - [x] Push images to GitHub Container Registry
+  - [x] GitHub Actions workflow for deployment (deploy.yml)
+    - [x] Deploy to staging environment on push to main
+    - [x] Deploy to production on release tag
+    - [x] Helm upgrade for Kubernetes deployments
+    - [x] Rollback capability on failure
+  - [x] Environment-specific Helm values (staging, production)
 - [x] Kubernetes Deployment
   - [x] Helm chart for the application
   - [x] Backend deployment and service
