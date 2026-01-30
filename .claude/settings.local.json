@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker-compose up:*)",
+      "Bash(tree:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run test:unit:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run test:run:*)",
+      "Bash(npx playwright install:*)",
+      "Bash(npm test)",
+      "Bash(git add:*)"
+    ]
+  }
+}
