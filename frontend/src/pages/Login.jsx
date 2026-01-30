@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { Input } from '../components/common/Input';
 import { Button } from '../components/common/Button';
+import { LanguageSelector } from '../components/common/LanguageSelector';
 
 export const Login = () => {
+  const { t } = useTranslation();
   const { login, isAuthenticated } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
@@ -28,7 +31,7 @@ export const Login = () => {
         setError(result.message);
       }
     } catch (err) {
-      setError('Authentication error');
+      setError(t('login.authError'));
     } finally {
       setLoading(false);
     }
@@ -43,39 +46,42 @@ export const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="absolute top-4 right-4">
+        <LanguageSelector />
+      </div>
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className="mx-auto h-16 w-16 bg-primary-600 rounded-lg flex items-center justify-center">
             <span className="text-white text-2xl font-bold">RP</span>
           </div>
           <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-            Red Potato
+            {t('login.title')}
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Auto Service ITP Management System
+            {t('login.subtitle')}
           </p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <Input
-              label="Username or Email"
+              label={t('login.usernameLabel')}
               name="username"
               type="text"
               required
               value={formData.username}
               onChange={handleChange}
-              placeholder="admin"
+              placeholder={t('login.usernamePlaceholder')}
             />
 
             <Input
-              label="Password"
+              label={t('login.passwordLabel')}
               name="password"
               type="password"
               required
               value={formData.password}
               onChange={handleChange}
-              placeholder="••••••••"
+              placeholder={t('login.passwordPlaceholder')}
             />
           </div>
 
@@ -86,18 +92,8 @@ export const Login = () => {
           )}
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? t('common.loggingIn') : t('common.login')}
           </Button>
-
-          <div className="text-sm text-center text-gray-600">
-            <p>Demo credentials:</p>
-            <p className="mt-1">
-              <strong>Admin:</strong> admin / admin123
-            </p>
-            <p>
-              <strong>Operator:</strong> operator / operator123
-            </p>
-          </div>
         </form>
       </div>
     </div>

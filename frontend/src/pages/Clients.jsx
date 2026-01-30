@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useClients } from '../hooks/useClients';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
@@ -7,6 +8,7 @@ import { Plus, Search, Trash2, Edit } from 'lucide-react';
 import { formatDate, getDaysRemainingClass, getDaysRemainingText } from '../utils/formatters';
 
 export const Clients = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { clients, loading, pagination, setPage, setSearch, deleteClient } = useClients();
   const [searchInput, setSearchInput] = useState('');
@@ -17,7 +19,7 @@ export const Clients = () => {
   };
 
   const handleDelete = async (id, name) => {
-    if (window.confirm(`Are you sure you want to delete client ${name}?`)) {
+    if (window.confirm(t('clients.deleteConfirm', { name }))) {
       await deleteClient(id);
     }
   };
@@ -26,10 +28,10 @@ export const Clients = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('clients.title')}</h1>
         <Button onClick={() => navigate('/clients/new')}>
           <Plus className="w-4 h-4 mr-2" />
-          Add Client
+          {t('clients.addClient')}
         </Button>
       </div>
 
@@ -37,14 +39,14 @@ export const Clients = () => {
       <form onSubmit={handleSearch} className="card">
         <div className="flex gap-4">
           <Input
-            placeholder="Search by name, license plate, email..."
+            placeholder={t('clients.searchPlaceholder')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="flex-1"
           />
           <Button type="submit">
             <Search className="w-4 h-4 mr-2" />
-            Search
+            {t('common.search')}
           </Button>
         </div>
       </form>
@@ -52,10 +54,10 @@ export const Clients = () => {
       {/* Clients Table */}
       <div className="card">
         {loading ? (
-          <div className="text-center py-8 text-gray-500">Loading...</div>
+          <div className="text-center py-8 text-gray-500">{t('common.loading')}</div>
         ) : clients.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            No registered clients
+            {t('clients.noClients')}
           </div>
         ) : (
           <>
@@ -63,13 +65,13 @@ export const Clients = () => {
               <table className="table">
                 <thead className="table-header">
                   <tr>
-                    <th className="table-header-cell">Name</th>
-                    <th className="table-header-cell">License Plate</th>
-                    <th className="table-header-cell">Phone</th>
-                    <th className="table-header-cell">Email</th>
-                    <th className="table-header-cell">ITP Expiration Date</th>
-                    <th className="table-header-cell">Days Remaining</th>
-                    <th className="table-header-cell">Actions</th>
+                    <th className="table-header-cell">{t('clients.name')}</th>
+                    <th className="table-header-cell">{t('clients.licensePlate')}</th>
+                    <th className="table-header-cell">{t('clients.phone')}</th>
+                    <th className="table-header-cell">{t('clients.email')}</th>
+                    <th className="table-header-cell">{t('clients.itpExpirationDate')}</th>
+                    <th className="table-header-cell">{t('clients.daysRemaining')}</th>
+                    <th className="table-header-cell">{t('clients.actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="table-body">
@@ -84,7 +86,7 @@ export const Clients = () => {
                       <td className="table-cell">{formatDate(client.itpExpirationDate)}</td>
                       <td className="table-cell">
                         <span className={`badge ${getDaysRemainingClass(client.daysRemaining)}`}>
-                          {getDaysRemainingText(client.daysRemaining)}
+                          {getDaysRemainingText(client.daysRemaining, t)}
                         </span>
                       </td>
                       <td className="table-cell">
@@ -92,14 +94,14 @@ export const Clients = () => {
                           <button
                             onClick={() => navigate(`/clients/${client.id}/edit`)}
                             className="p-2 text-blue-600 hover:bg-blue-50 rounded"
-                            title="Edit"
+                            title={t('common.edit')}
                           >
                             <Edit className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(client.id, client.name)}
                             className="p-2 text-red-600 hover:bg-red-50 rounded"
-                            title="Delete"
+                            title={t('common.delete')}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -115,7 +117,7 @@ export const Clients = () => {
             {pagination.totalPages > 1 && (
               <div className="flex items-center justify-between mt-6 pt-6 border-t">
                 <div className="text-sm text-gray-700">
-                  Page {pagination.page} of {pagination.totalPages} ({pagination.total} clients)
+                  {t('common.page')} {pagination.page} {t('common.of')} {pagination.totalPages} ({pagination.total} {t('common.clients')})
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -123,14 +125,14 @@ export const Clients = () => {
                     onClick={() => setPage(pagination.page - 1)}
                     disabled={pagination.page === 1}
                   >
-                    Previous
+                    {t('common.previous')}
                   </Button>
                   <Button
                     variant="secondary"
                     onClick={() => setPage(pagination.page + 1)}
                     disabled={pagination.page === pagination.totalPages}
                   >
-                    Next
+                    {t('common.next')}
                   </Button>
                 </div>
               </div>

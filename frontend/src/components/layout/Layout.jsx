@@ -1,5 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
+import { LanguageSelector } from '../common/LanguageSelector';
 import {
   LayoutDashboard,
   Users,
@@ -11,15 +13,16 @@ import {
 import { useState } from 'react';
 
 export const Layout = ({ children }) => {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigation = [
-    { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-    { name: 'Clients', href: '/clients', icon: Users },
-    { name: 'Notifications', href: '/notifications', icon: Bell },
+    { name: t('nav.dashboard'), href: '/', icon: LayoutDashboard },
+    { name: t('nav.clients'), href: '/clients', icon: Users },
+    { name: t('nav.notifications'), href: '/notifications', icon: Bell },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -68,7 +71,7 @@ export const Layout = ({ children }) => {
               const Icon = item.icon;
               return (
                 <Link
-                  key={item.name}
+                  key={item.href}
                   to={item.href}
                   className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                     isActive(item.href)
@@ -104,7 +107,7 @@ export const Layout = ({ children }) => {
               className="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
             >
               <LogOut className="w-5 h-5 mr-3" />
-              Logout
+              {t('common.logout')}
             </button>
           </div>
         </div>
@@ -113,16 +116,19 @@ export const Layout = ({ children }) => {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <header className="sticky top-0 z-10 flex items-center h-16 px-6 bg-white border-b border-gray-200">
-          <button
-            className="lg:hidden mr-4"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-          <h1 className="text-lg font-semibold text-gray-900">
-            ITP Management System
-          </h1>
+        <header className="sticky top-0 z-10 flex items-center justify-between h-16 px-6 bg-white border-b border-gray-200">
+          <div className="flex items-center">
+            <button
+              className="lg:hidden mr-4"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+            <h1 className="text-lg font-semibold text-gray-900">
+              {t('nav.systemTitle')}
+            </h1>
+          </div>
+          <LanguageSelector />
         </header>
 
         {/* Page content */}

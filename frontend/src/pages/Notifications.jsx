@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import notificationService from '../services/notificationService';
 import { formatDateTime, formatNotificationStatus, getNotificationStatusClass, formatNotificationType } from '../utils/formatters';
 import { Filter } from 'lucide-react';
 
 export const Notifications = () => {
+  const { t } = useTranslation();
   const [notifications, setNotifications] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -35,25 +37,25 @@ export const Notifications = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('notifications.title')}</h1>
 
       {/* Stats */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="card">
-            <p className="text-sm text-gray-600">Total Notifications</p>
+            <p className="text-sm text-gray-600">{t('notifications.totalNotifications')}</p>
             <p className="text-3xl font-bold text-gray-900 mt-2">{stats.total}</p>
           </div>
           <div className="card">
-            <p className="text-sm text-gray-600">Sent Successfully</p>
+            <p className="text-sm text-gray-600">{t('notifications.sentSuccessfully')}</p>
             <p className="text-3xl font-bold text-green-600 mt-2">{stats.byStatus.sent}</p>
           </div>
           <div className="card">
-            <p className="text-sm text-gray-600">Failed</p>
+            <p className="text-sm text-gray-600">{t('notifications.failed')}</p>
             <p className="text-3xl font-bold text-red-600 mt-2">{stats.byStatus.failed}</p>
           </div>
           <div className="card">
-            <p className="text-sm text-gray-600">SMS / Email</p>
+            <p className="text-sm text-gray-600">{t('notifications.smsEmail')}</p>
             <p className="text-lg font-bold text-gray-900 mt-2">
               {stats.byType.sms} / {stats.byType.email}
             </p>
@@ -70,19 +72,19 @@ export const Notifications = () => {
             onChange={(e) => handleFilterChange('type', e.target.value)}
             className="input w-48"
           >
-            <option value="">All types</option>
-            <option value="SMS">SMS</option>
-            <option value="EMAIL">Email</option>
+            <option value="">{t('notifications.allTypes')}</option>
+            <option value="SMS">{t('notifications.sms')}</option>
+            <option value="EMAIL">{t('notifications.email')}</option>
           </select>
           <select
             value={filter.status}
             onChange={(e) => handleFilterChange('status', e.target.value)}
             className="input w-48"
           >
-            <option value="">All statuses</option>
-            <option value="sent">Sent</option>
-            <option value="failed">Failed</option>
-            <option value="pending">Pending</option>
+            <option value="">{t('notifications.allStatuses')}</option>
+            <option value="sent">{t('notifications.sent')}</option>
+            <option value="failed">{t('notifications.failed')}</option>
+            <option value="pending">{t('notifications.pending')}</option>
           </select>
         </div>
       </div>
@@ -90,21 +92,21 @@ export const Notifications = () => {
       {/* Notifications List */}
       <div className="card">
         {loading ? (
-          <div className="text-center py-8 text-gray-500">Loading...</div>
+          <div className="text-center py-8 text-gray-500">{t('common.loading')}</div>
         ) : notifications.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            No notifications
+            {t('notifications.noNotifications')}
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="table">
               <thead className="table-header">
                 <tr>
-                  <th className="table-header-cell">Client</th>
-                  <th className="table-header-cell">Type</th>
-                  <th className="table-header-cell">Status</th>
-                  <th className="table-header-cell">Message</th>
-                  <th className="table-header-cell">Send Date</th>
+                  <th className="table-header-cell">{t('notifications.client')}</th>
+                  <th className="table-header-cell">{t('notifications.type')}</th>
+                  <th className="table-header-cell">{t('notifications.status')}</th>
+                  <th className="table-header-cell">{t('notifications.message')}</th>
+                  <th className="table-header-cell">{t('notifications.sendDate')}</th>
                 </tr>
               </thead>
               <tbody className="table-body">
@@ -120,12 +122,12 @@ export const Notifications = () => {
                     </td>
                     <td className="table-cell">
                       <span className="badge badge-info">
-                        {formatNotificationType(notification.type)}
+                        {formatNotificationType(notification.type, t)}
                       </span>
                     </td>
                     <td className="table-cell">
                       <span className={`badge ${getNotificationStatusClass(notification.status)}`}>
-                        {formatNotificationStatus(notification.status)}
+                        {formatNotificationStatus(notification.status, t)}
                       </span>
                     </td>
                     <td className="table-cell max-w-md truncate">{notification.message}</td>

@@ -1,5 +1,10 @@
 import { format, formatDistanceToNow, parseISO } from 'date-fns';
-import { ro } from 'date-fns/locale';
+import { ro, enUS, fr } from 'date-fns/locale';
+import i18n from '../i18n';
+
+const locales = { ro, en: enUS, fr };
+
+const getLocale = () => locales[i18n.language] || ro;
 
 /**
  * Format a date in DD.MM.YYYY format
@@ -7,7 +12,7 @@ import { ro } from 'date-fns/locale';
 export const formatDate = (date) => {
   if (!date) return '-';
   try {
-    return format(parseISO(date), 'dd.MM.yyyy', { locale: ro });
+    return format(parseISO(date), 'dd.MM.yyyy', { locale: getLocale() });
   } catch (error) {
     return '-';
   }
@@ -19,7 +24,7 @@ export const formatDate = (date) => {
 export const formatDateTime = (date) => {
   if (!date) return '-';
   try {
-    return format(parseISO(date), 'dd.MM.yyyy HH:mm', { locale: ro });
+    return format(parseISO(date), 'dd.MM.yyyy HH:mm', { locale: getLocale() });
   } catch (error) {
     return '-';
   }
@@ -33,7 +38,7 @@ export const formatRelativeTime = (date) => {
   try {
     return formatDistanceToNow(parseISO(date), {
       addSuffix: true,
-      locale: ro,
+      locale: getLocale(),
     });
   } catch (error) {
     return '-';
@@ -78,22 +83,34 @@ export const getDaysRemainingClass = (days) => {
 };
 
 /**
- * Generate text for days remaining
+ * Generate text for days remaining (with optional translation function)
  */
-export const getDaysRemainingText = (days) => {
-  if (days < 0) {
-    const expired = Math.abs(days);
-    return `Expired ${expired} ${expired === 1 ? 'day' : 'days'} ago`;
+export const getDaysRemainingText = (days, t) => {
+  if (t) {
+    if (days < 0) return t('status.expired');
+    if (days === 0) return t('status.today');
+    return t('status.daysLeft', { count: days });
   }
-  if (days === 0) return 'Expires today';
-  if (days === 1) return 'Expires tomorrow';
+
+  // Fallback without translation
+  if (days < 0) return 'EXPIRED';
+  if (days === 0) return 'Today';
   return `${days} days`;
 };
 
 /**
- * Format notification status
+ * Format notification status (with optional translation function)
  */
-export const formatNotificationStatus = (status) => {
+export const formatNotificationStatus = (status, t) => {
+  if (t) {
+    const statusMap = {
+      sent: t('notifications.sent'),
+      failed: t('notifications.failed'),
+      pending: t('notifications.pending'),
+    };
+    return statusMap[status] || status;
+  }
+
   const statusMap = {
     sent: 'Sent',
     failed: 'Failed',
@@ -115,9 +132,18 @@ export const getNotificationStatusClass = (status) => {
 };
 
 /**
- * Format notification type
+ * Format notification type (with optional translation function)
  */
-export const formatNotificationType = (type) => {
+export const formatNotificationType = (type, t) => {
+  if (t) {
+    const typeMap = {
+      SMS: t('notifications.sms'),
+      EMAIL: t('notifications.email'),
+      BOTH: `${t('notifications.sms')} & ${t('notifications.email')}`,
+    };
+    return typeMap[type] || type;
+  }
+
   const typeMap = {
     SMS: 'SMS',
     EMAIL: 'Email',
