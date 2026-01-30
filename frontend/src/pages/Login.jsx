@@ -30,7 +30,7 @@ export const Login = () => {
       if (!result.success) {
         setError(result.message);
       }
-    } catch (err) {
+    } catch (_err) {
       setError(t('login.authError'));
     } finally {
       setLoading(false);

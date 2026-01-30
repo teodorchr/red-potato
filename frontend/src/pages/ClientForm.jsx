@@ -40,7 +40,7 @@ export const ClientForm = () => {
         email: client.email,
         itpExpirationDate: client.itpExpirationDate.split('T')[0],
       });
-    } catch (error) {
+    } catch (_error) {
       toast.error(t('clients.errorLoading'));
       navigate('/clients');
     }
