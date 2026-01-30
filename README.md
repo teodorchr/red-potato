@@ -91,40 +91,50 @@ npm run dev
 - Frontend: http://localhost:5173
 - Backend: http://localhost:3000
 
-### Demo Credentials
-- **Admin**: `admin` / `admin123`
-- **Operator**: `operator` / `operator123`
+### Initial Setup
+After configuring your `.env` file with `SEED_ADMIN_PASSWORD` and `SEED_OPERATOR_PASSWORD`, run the database seed to create initial users:
+```bash
+cd backend
+npx prisma db seed
+```
+This creates two users: `admin` and `operator` with the passwords you specified.
 
 ## Environment Variables
 
 ```env
-# Database
-DATABASE_URL=postgresql://postgres:password@localhost:5432/red_potato
-DB_PASSWORD=your_password
+# Database (REQUIRED)
+DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5432/red_potato
+DB_PASSWORD=YOUR_SECURE_PASSWORD
 
-# Authentication
-JWT_SECRET=your_jwt_secret
+# Authentication (REQUIRED - generate with: openssl rand -base64 32)
+JWT_SECRET=YOUR_GENERATED_SECRET
 
 # CORS
 CORS_ORIGIN=http://localhost:5173
 
-# Twilio (SMS)
-TWILIO_ACCOUNT_SID=your_account_sid
-TWILIO_AUTH_TOKEN=your_auth_token
-TWILIO_PHONE_NUMBER=+1234567890
+# Twilio SMS (optional - will simulate if not set)
+TWILIO_ACCOUNT_SID=
+TWILIO_AUTH_TOKEN=
+TWILIO_PHONE_NUMBER=
 
-# Email (SMTP)
+# Email SMTP (optional - will simulate if not set)
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASSWORD=your_app_password
+EMAIL_USER=
+EMAIL_PASSWORD=
 EMAIL_FROM=Service Auto <noreply@serviceauto.ro>
 
 # Scheduler
 CRON_ENABLED=true
 CRON_TIMEZONE=Europe/Bucharest
 ITP_REMINDER_DAYS=7
+
+# Seed passwords (REQUIRED for initial setup)
+SEED_ADMIN_PASSWORD=YOUR_ADMIN_PASSWORD
+SEED_OPERATOR_PASSWORD=YOUR_OPERATOR_PASSWORD
 ```
+
+**Security Note:** Never commit `.env` files with real credentials. Use `.env.example` as a template.
 
 ## API Endpoints
 

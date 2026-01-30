@@ -107,27 +107,28 @@ For Gmail:
 - **Schedule**: First day of each month at 00:00
 - **Function**: Deletes notifications older than 6 months
 
-## Demo Credentials
+## User Setup
 
-After running `npm run prisma:seed`:
+Before running `npm run prisma:seed`, configure your passwords in `.env`:
 
-- **Admin**:
-  - Username: `admin` or Email: `admin@serviceauto.ro`
-  - Password: `admin123`
+```env
+SEED_ADMIN_PASSWORD=your_secure_admin_password
+SEED_OPERATOR_PASSWORD=your_secure_operator_password
+```
 
-- **Operator**:
-  - Username: `operator` or Email: `operator@serviceauto.ro`
-  - Password: `operator123`
+After seeding, two users will be created:
+- **Admin**: Username `admin` or Email `admin@serviceauto.ro`
+- **Operator**: Username `operator` or Email `operator@serviceauto.ro`
 
 ## API Testing
 
 Using curl:
 
 ```bash
-# Login
+# Login (replace YOUR_PASSWORD with your actual password)
 curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin123"}'
+  -d '{"username":"admin","password":"YOUR_PASSWORD"}'
 
 # Get client list (with token)
 curl http://localhost:3000/api/clients \
@@ -144,6 +145,11 @@ curl -X POST http://localhost:3000/api/clients \
     "email": "test@example.com",
     "dataExpirareItp": "2026-03-01"
   }'
+```
+
+Using the test script:
+```bash
+TEST_USERNAME=admin TEST_PASSWORD=your_password node test_api.js
 ```
 
 ## Environment Variables

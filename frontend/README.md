@@ -188,8 +188,10 @@ npm install
 npm run build
 ```
 
-## Demo Credentials
+## User Authentication
 
-After database seeding:
-- **Admin**: `admin` / `admin123`
-- **Operator**: `operator` / `operator123`
+After running the backend database seed with your configured passwords:
+- **Admin**: Username `admin` with password set in `SEED_ADMIN_PASSWORD`
+- **Operator**: Username `operator` with password set in `SEED_OPERATOR_PASSWORD`
+
+See the backend README for user setup instructions.

@@ -18,18 +18,27 @@ nano .env
 
 ### 2. .env Configuration
 
-Edit the `.env` file and fill in the values:
+Edit the `.env` file and fill in all required values. Generate secure values for sensitive fields:
 
-```env
-DB_PASSWORD=parola_sigura_postgres
-JWT_SECRET=o_cheie_secreta_foarte_lunga_si_aleatoare
-CORS_ORIGIN=http://your-domain.com
-TWILIO_ACCOUNT_SID=your_twilio_sid
-TWILIO_AUTH_TOKEN=your_twilio_token
-TWILIO_PHONE_NUMBER=+1234567890
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASSWORD=your_gmail_app_password
+```bash
+# Generate a secure database password
+openssl rand -base64 24
+
+# Generate a JWT secret
+openssl rand -base64 32
 ```
+
+Required environment variables:
+- `DB_PASSWORD` - Secure database password
+- `JWT_SECRET` - Random secret for JWT tokens
+- `SEED_ADMIN_PASSWORD` - Password for admin user
+- `SEED_OPERATOR_PASSWORD` - Password for operator user
+
+Optional (notifications will be simulated if not set):
+- `TWILIO_*` - For SMS notifications
+- `EMAIL_*` - For email notifications
+
+See `.env.example` for the complete list.
 
 ### 3. Start Application
 
@@ -325,13 +334,18 @@ docker-compose exec backend npx prisma db push
 
 ## Security
 
-1. **Change default passwords** from `.env.example`
+1. **Generate unique secrets** - Never use example values from `.env.example`
+   ```bash
+   openssl rand -base64 32  # For JWT_SECRET
+   openssl rand -base64 24  # For DB_PASSWORD
+   ```
 2. **Use HTTPS** in production (Let's Encrypt)
 3. **Regular backup** of the database
 4. **Regular updates** of dependencies: `npm audit fix`
 5. **Monitor** logs for suspicious activity
 6. **Restrict access** to DB ports (5432) to local only
 7. **Rate limiting** is enabled by default in API
+8. **Never commit** `.env` files with real credentials
 
 ## Updates
 

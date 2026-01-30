@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_DB: red_potato
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres123}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -32,8 +32,8 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://postgres:${DB_PASSWORD:-postgres123}@db:5432/red_potato
-      JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgresql://postgres:${DB_PASSWORD:?DB_PASSWORD is required}@db:5432/red_potato
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
       PORT: 3000
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost}
       TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}

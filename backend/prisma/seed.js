@@ -6,8 +6,18 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Starting database seeding...');
 
+  // Get passwords from environment variables (required for production)
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD;
+  const operatorPassword = process.env.SEED_OPERATOR_PASSWORD;
+
+  if (!adminPassword || !operatorPassword) {
+    console.error('❌ Error: SEED_ADMIN_PASSWORD and SEED_OPERATOR_PASSWORD environment variables are required.');
+    console.error('   Set these in your .env file before running the seed script.');
+    process.exit(1);
+  }
+
   // Create admin user
-  const passwordHash = await bcrypt.hash('admin123', 10);
+  const passwordHash = await bcrypt.hash(adminPassword, 10);
   const admin = await prisma.user.upsert({
     where: { email: 'admin@serviceauto.ro' },
     update: {},
@@ -21,7 +31,7 @@ async function main() {
   console.log('✅ Admin user created:', admin.email);
 
   // Create operator user
-  const operatorPasswordHash = await bcrypt.hash('operator123', 10);
+  const operatorPasswordHash = await bcrypt.hash(operatorPassword, 10);
   const operator = await prisma.user.upsert({
     where: { email: 'operator@serviceauto.ro' },
     update: {},
