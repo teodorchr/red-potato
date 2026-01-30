@@ -13,7 +13,7 @@ export const authenticateToken = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({
         success: false,
-        message: 'Authentication token missing'
+        message: 'Authentication token missing',
       });
     }
 
@@ -22,13 +22,13 @@ export const authenticateToken = async (req, res, next) => {
     // Check if user still exists in database
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
-      select: { id: true, username: true, email: true, rol: true }
+      select: { id: true, username: true, email: true, rol: true },
     });
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid user'
+        message: 'Invalid user',
       });
     }
 
@@ -38,18 +38,18 @@ export const authenticateToken = async (req, res, next) => {
     if (error.name === 'JsonWebTokenError') {
       return res.status(403).json({
         success: false,
-        message: 'Invalid token'
+        message: 'Invalid token',
       });
     }
     if (error.name === 'TokenExpiredError') {
       return res.status(403).json({
         success: false,
-        message: 'Token expired'
+        message: 'Token expired',
       });
     }
     return res.status(500).json({
       success: false,
-      message: 'Authentication error'
+      message: 'Authentication error',
     });
   }
 };
@@ -61,7 +61,7 @@ export const requireAdmin = (req, res, next) => {
   if (req.user.rol !== 'admin') {
     return res.status(403).json({
       success: false,
-      message: 'Access allowed only for administrators'
+      message: 'Access allowed only for administrators',
     });
   }
   next();
@@ -79,7 +79,7 @@ export const optionalAuth = async (req, res, next) => {
       const decoded = jwt.verify(token, config.jwtSecret);
       const user = await prisma.user.findUnique({
         where: { id: decoded.userId },
-        select: { id: true, username: true, email: true, rol: true }
+        select: { id: true, username: true, email: true, rol: true },
       });
 
       if (user) {

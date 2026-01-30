@@ -8,13 +8,13 @@ export const validate = (schema) => {
     if (!result.success) {
       const errors = result.error.errors.map(err => ({
         field: err.path.join('.'),
-        message: err.message
+        message: err.message,
       }));
 
       return res.status(400).json({
         success: false,
         message: 'Validation errors',
-        errors
+        errors,
       });
     }
 
@@ -35,7 +35,7 @@ export const validateUUID = (paramName = 'id') => {
     if (!uuidRegex.test(uuid)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid ID'
+        message: 'Invalid ID',
       });
     }
 

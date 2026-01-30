@@ -1,6 +1,7 @@
 import cron from 'node-cron';
 import config from '../config/env.js';
 import checkAndNotifyExpiringITP from './itp-reminder.js';
+import prisma from '../config/database.js';
 
 /**
  * Initialize and start all cronjobs
@@ -32,7 +33,7 @@ export const initScheduler = () => {
     {
       scheduled: true,
       timezone: config.cron.timezone,
-    }
+    },
   );
 
   console.log('✅ Cronjob "ITP Reminder" scheduled successfully');
@@ -68,7 +69,7 @@ export const initScheduler = () => {
     {
       scheduled: true,
       timezone: config.cron.timezone,
-    }
+    },
   );
 
   console.log('✅ Cronjob "Cleanup" scheduled successfully');
@@ -107,13 +108,9 @@ export const runItpReminderManually = async () => {
 /**
  * Helper to display the next scheduled run
  */
-const getNextRunTime = (cronJob) => {
-  try {
-    // node-cron doesn't provide an API for next run time, return a generic message
-    return 'Check cron schedule for next run time';
-  } catch (error) {
-    return 'Unable to determine next run time';
-  }
+const getNextRunTime = (_cronJob) => {
+  // node-cron doesn't provide an API for next run time, return a generic message
+  return 'Check cron schedule for next run time';
 };
 
 export default {

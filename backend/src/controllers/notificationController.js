@@ -5,7 +5,6 @@ import {
   sendBothNotifications,
   getNotificationStats,
 } from '../services/notificationService.js';
-import { getDaysDifference } from '../utils/helpers.js';
 
 /**
  * Get all notifications
@@ -86,7 +85,7 @@ export const sendTestNotification = async (req, res, next) => {
 
     // Calculate days remaining
     const daysRemaining = Math.ceil(
-      (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24)
+      (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24),
     );
 
     let result = {};
@@ -136,7 +135,6 @@ export const getStats = async (req, res, next) => {
       include: {
         client: {
           select: {
-            name: true,
             name: true,
             licensePlate: true,
           },
@@ -200,7 +198,7 @@ export const retryNotification = async (req, res, next) => {
 
     const daysRemaining = Math.ceil(
       (new Date(notification.client.itpExpirationDate) - new Date()) /
-      (1000 * 60 * 60 * 24)
+      (1000 * 60 * 60 * 24),
     );
 
     let result;

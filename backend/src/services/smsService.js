@@ -105,7 +105,7 @@ export const checkSMSStatus = async (messageSid) => {
       errorMessage: message.errorMessage,
     };
   } catch (error) {
-    console.error(`❌ Failed to check SMS status:`, error.message);
+    console.error('❌ Failed to check SMS status:', error.message);
     throw new Error(`SMS status check failed: ${error.message}`);
   }
 };

@@ -116,7 +116,7 @@ export const getDashboardStats = async (req, res, next) => {
     const upcomingWithDays = upcomingExpirations.map((client) => ({
       ...client,
       daysRemaining: Math.ceil(
-        (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24)
+        (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24),
       ),
     }));
 

@@ -79,11 +79,11 @@ export const checkAndNotifyExpiringITP = async () => {
 
         // Calculate days remaining until expiration
         const daysRemaining = Math.ceil(
-          (new Date(client.itpExpirationDate) - today) / (1000 * 60 * 60 * 24)
+          (new Date(client.itpExpirationDate) - today) / (1000 * 60 * 60 * 24),
         );
 
         console.log(
-          `📤 Sending notifications to ${client.name} (${client.licensePlate}) - ${daysRemaining} days remaining`
+          `📤 Sending notifications to ${client.name} (${client.licensePlate}) - ${daysRemaining} days remaining`,
         );
 
         // Send both notifications (SMS and Email)

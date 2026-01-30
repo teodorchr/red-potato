@@ -42,7 +42,7 @@ export const login = async (req, res, next) => {
     const token = jwt.sign(
       { userId: user.id, username: user.username, rol: user.rol },
       config.jwtSecret,
-      { expiresIn: config.jwtExpiresIn }
+      { expiresIn: config.jwtExpiresIn },
     );
 
     // Update last login

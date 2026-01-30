@@ -1,5 +1,4 @@
 import prisma from '../config/database.js';
-import { getDaysDifference } from '../utils/helpers.js';
 import config from '../config/env.js';
 
 /**
@@ -47,7 +46,7 @@ export const getClients = async (req, res, next) => {
     const clientsWithDaysRemaining = clients.map((client) => ({
       ...client,
       daysRemaining: Math.ceil(
-        (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24)
+        (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24),
       ),
     }));
 
@@ -95,7 +94,7 @@ export const getClientById = async (req, res, next) => {
 
     // Add days remaining
     const daysRemaining = Math.ceil(
-      (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24)
+      (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24),
     );
 
     res.json({
@@ -246,7 +245,7 @@ export const getExpiringClients = async (req, res, next) => {
     const clientsWithDaysRemaining = clients.map((client) => ({
       ...client,
       daysRemaining: Math.ceil(
-        (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24)
+        (new Date(client.itpExpirationDate) - new Date()) / (1000 * 60 * 60 * 24),
       ),
     }));
 
