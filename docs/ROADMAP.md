@@ -4,15 +4,10 @@ This document outlines planned features and improvements for the Red Potato Vehi
 
 ## In Progress
 
-*No items currently in progress*
+### Testing
+- [ ] Integration tests for API endpoints (requires test database setup)
 
 ## Planned
-
-### Testing
-- [ ] Unit tests for backend controllers and services
-- [ ] Integration tests for API endpoints
-- [ ] Frontend component tests with React Testing Library
-- [ ] End-to-end tests with Playwright or Cypress
 
 ### Features
 - [ ] Bulk import clients from CSV/Excel
@@ -30,6 +25,16 @@ This document outlines planned features and improvements for the Red Potato Vehi
 
 ## Completed
 
+- [x] Testing Infrastructure
+  - [x] Jest setup for backend with ES modules support
+  - [x] Vitest + React Testing Library for frontend
+  - [x] Playwright for E2E tests
+  - [x] Unit tests for backend utils and validators
+  - [x] Unit tests for backend middlewares (auth, errorHandler)
+  - [x] Unit tests for backend services (notification, email, sms)
+  - [x] Frontend utility tests (formatters, validators)
+  - [x] Frontend component tests (Button, Input)
+  - [x] E2E test specs for auth, clients, and dashboard flows
 - [x] CI/CD Pipeline
   - [x] GitHub Actions workflow for build (ci.yml)
     - [x] Lint and test backend

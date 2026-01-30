@@ -1,0 +1,32 @@
+{
+  "users": {
+    "admin": {
+      "username": "admin",
+      "password": "admin123",
+      "email": "admin@test.com",
+      "role": "admin"
+    },
+    "operator": {
+      "username": "operator",
+      "password": "operator123",
+      "email": "operator@test.com",
+      "role": "operator"
+    }
+  },
+  "clients": [
+    {
+      "name": "Test Client 1",
+      "licensePlate": "B-001-TST",
+      "phoneNumber": "+40722000001",
+      "email": "client1@test.com",
+      "itpExpirationDate": "2024-12-31"
+    },
+    {
+      "name": "Test Client 2",
+      "licensePlate": "CJ-002-TST",
+      "phoneNumber": "+40722000002",
+      "email": "client2@test.com",
+      "itpExpirationDate": "2024-06-15"
+    }
+  ]
+}
