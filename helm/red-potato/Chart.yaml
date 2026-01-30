@@ -1,0 +1,17 @@
+apiVersion: v2
+name: red-potato
+description: A Helm chart for Red Potato - Vehicle Inspection (ITP) Management System
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - itp
+  - vehicle-inspection
+  - management
+  - notifications
+maintainers:
+  - name: Red Potato Team
+    email: contact@serviceauto.ro
+home: https://github.com/teodorchr/red-potato
+sources:
+  - https://github.com/teodorchr/red-potato

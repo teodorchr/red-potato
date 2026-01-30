@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "red-potato.configmap.fullname" . }}
+  labels:
+    {{- include "red-potato.labels" . | nindent 4 }}
+data:
+  CORS_ORIGIN: {{ .Values.config.corsOrigin | default (printf "https://%s" (index .Values.ingress.hosts 0).host) | quote }}
+  JWT_EXPIRES_IN: {{ .Values.config.jwtExpiresIn | quote }}
+  CRON_ENABLED: {{ .Values.config.cronEnabled | quote }}
+  CRON_TIMEZONE: {{ .Values.config.cronTimezone | quote }}
+  ITP_REMINDER_DAYS: {{ .Values.config.itpReminderDays | quote }}
+  {{- if .Values.config.email.enabled }}
+  EMAIL_HOST: {{ .Values.config.email.host | quote }}
+  EMAIL_PORT: {{ .Values.config.email.port | quote }}
+  EMAIL_SECURE: {{ .Values.config.email.secure | quote }}
+  EMAIL_FROM: {{ .Values.config.email.from | quote }}
+  {{- end }}
