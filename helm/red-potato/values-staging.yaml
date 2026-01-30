@@ -1,0 +1,62 @@
+# Staging environment values for red-potato Helm chart
+
+# Backend configuration - lower resources for staging
+backend:
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 250m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+  autoscaling:
+    enabled: false
+
+# Frontend configuration - single replica for staging
+frontend:
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 25m
+      memory: 64Mi
+
+# PostgreSQL - smaller storage for staging
+postgresql:
+  enabled: true
+  primary:
+    persistence:
+      size: 5Gi
+
+# Application configuration
+config:
+  corsOrigin: "https://staging.red-potato.example.com"
+  cronEnabled: true
+  twilio:
+    enabled: false
+  email:
+    enabled: false
+
+# Ingress with TLS for staging
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+  hosts:
+    - host: staging.red-potato.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+          service: frontend
+        - path: /api
+          pathType: Prefix
+          service: backend
+  tls:
+    - secretName: red-potato-staging-tls
+      hosts:
+        - staging.red-potato.example.com
