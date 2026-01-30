@@ -1,10 +1,16 @@
 name: Deploy
 
 on:
-  push:
-    branches: [main]
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      are_you_robot: 
+        description: 'Are you a robot? (leave blank to proceed)'
+        required: false
+# Uncomment the following lines to enable automatic deployments
+#  push:
+#    branches: [main]
+#  release:
+#    types: [published]
 
 env:
   REGISTRY: ghcr.io
