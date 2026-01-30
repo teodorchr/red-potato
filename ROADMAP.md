@@ -4,17 +4,6 @@ This document outlines planned features and improvements for the Red Potato Vehi
 
 ## In Progress
 
-### Kubernetes Deployment
-- [ ] Create Helm chart for the application
-  - [ ] Backend deployment and service
-  - [ ] Frontend deployment and service
-  - [ ] PostgreSQL StatefulSet (or external DB config)
-  - [ ] ConfigMaps for environment configuration
-  - [ ] Secrets management for sensitive data
-  - [ ] Ingress configuration with TLS support
-  - [ ] Horizontal Pod Autoscaler (HPA) for backend
-- [ ] Document Helm values and installation instructions
-
 ### CI/CD Pipeline
 - [ ] GitHub Actions workflow for build
   - [ ] Lint and test backend
@@ -51,6 +40,16 @@ This document outlines planned features and improvements for the Red Potato Vehi
 
 ## Completed
 
+- [x] Kubernetes Deployment
+  - [x] Helm chart for the application
+  - [x] Backend deployment and service
+  - [x] Frontend deployment and service
+  - [x] PostgreSQL StatefulSet (with external DB support)
+  - [x] ConfigMaps for environment configuration
+  - [x] Secrets management for sensitive data
+  - [x] Ingress configuration with TLS support
+  - [x] Horizontal Pod Autoscaler (HPA) for backend
+  - [x] Helm values and installation documentation
 - [x] Internationalization (i18n)
   - [x] Language selector in UI header
   - [x] Support for Romanian (default), English, and French

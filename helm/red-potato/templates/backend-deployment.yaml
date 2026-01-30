@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "red-potato.backend.fullname" . }}
+  labels:
+    {{- include "red-potato.backend.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.backend.autoscaling.enabled }}
+  replicas: {{ .Values.backend.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "red-potato.backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+      labels:
+        {{- include "red-potato.backend.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- include "red-potato.imagePullSecrets" . | nindent 6 }}
+      serviceAccountName: {{ include "red-potato.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: backend
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.global.imageRegistry }}{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ include "red-potato.configmap.fullname" . }}
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3000"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.postgresql.external.enabled }}
+                  name: {{ .Values.postgresql.external.existingSecret | default (include "red-potato.secrets.fullname" .) }}
+                  key: {{ .Values.postgresql.external.secretKeys.passwordKey | default "postgres-password" }}
+                  {{- else }}
+                  name: {{ .Values.postgresql.auth.existingSecret | default (include "red-potato.secrets.fullname" .) }}
+                  key: {{ .Values.postgresql.auth.secretKeys.passwordKey | default "postgres-password" }}
+                  {{- end }}
+            - name: DATABASE_URL
+              value: {{ include "red-potato.databaseUrl" . | quote }}
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "red-potato.secrets.fullname" . }}
+                  key: jwt-secret
+            {{- if .Values.config.twilio.enabled }}
+            - name: TWILIO_ACCOUNT_SID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.twilio.existingSecret | default (include "red-potato.secrets.fullname" .) }}
+                  key: {{ .Values.config.twilio.secretKeys.accountSidKey | default "twilio-account-sid" }}
+            - name: TWILIO_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.twilio.existingSecret | default (include "red-potato.secrets.fullname" .) }}
+                  key: {{ .Values.config.twilio.secretKeys.authTokenKey | default "twilio-auth-token" }}
+            - name: TWILIO_PHONE_NUMBER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.twilio.existingSecret | default (include "red-potato.secrets.fullname" .) }}
+                  key: {{ .Values.config.twilio.secretKeys.phoneNumberKey | default "twilio-phone-number" }}
+            {{- end }}
+            {{- if .Values.config.email.enabled }}
+            - name: EMAIL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.email.existingSecret | default (include "red-potato.secrets.fullname" .) }}
+                  key: {{ .Values.config.email.secretKeys.userKey | default "email-user" }}
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.config.email.existingSecret | default (include "red-potato.secrets.fullname" .) }}
+                  key: {{ .Values.config.email.secretKeys.passwordKey | default "email-password" }}
+            {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.backend.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.backend.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+      {{- with .Values.backend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
