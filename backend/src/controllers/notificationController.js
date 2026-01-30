@@ -91,23 +91,23 @@ export const sendTestNotification = async (req, res, next) => {
     let result = {};
 
     switch (type) {
-      case 'SMS':
-        result = await sendSMSNotification(client, daysRemaining);
-        break;
+    case 'SMS':
+      result = await sendSMSNotification(client, daysRemaining);
+      break;
 
-      case 'EMAIL':
-        result = await sendEmailNotification(client, daysRemaining);
-        break;
+    case 'EMAIL':
+      result = await sendEmailNotification(client, daysRemaining);
+      break;
 
-      case 'BOTH':
-        result = await sendBothNotifications(client, daysRemaining);
-        break;
+    case 'BOTH':
+      result = await sendBothNotifications(client, daysRemaining);
+      break;
 
-      default:
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid notification type. Use: SMS, EMAIL, or BOTH',
-        });
+    default:
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid notification type. Use: SMS, EMAIL, or BOTH',
+      });
     }
 
     res.json({
