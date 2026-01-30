@@ -4,13 +4,6 @@ This document outlines planned features and improvements for the Red Potato Vehi
 
 ## In Progress
 
-### Internationalization (i18n)
-- [ ] Add language selector button in the UI header
-- [ ] Support for Romanian (default), English, and French
-- [ ] Translate all UI labels, messages, and notifications
-- [ ] Persist language preference in localStorage
-- [ ] Backend support for localized email/SMS templates
-
 ### Kubernetes Deployment
 - [ ] Create Helm chart for the application
   - [ ] Backend deployment and service
@@ -58,6 +51,12 @@ This document outlines planned features and improvements for the Red Potato Vehi
 
 ## Completed
 
+- [x] Internationalization (i18n)
+  - [x] Language selector in UI header
+  - [x] Support for Romanian (default), English, and French
+  - [x] All UI labels, messages, and notifications translated
+  - [x] Language preference persisted in localStorage
+  - [x] Backend localized email/SMS templates
 - [x] Core client management (CRUD operations)
 - [x] JWT authentication with role-based access
 - [x] Dashboard with statistics

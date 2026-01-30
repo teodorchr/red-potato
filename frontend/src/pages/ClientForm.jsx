@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Input } from '../components/common/Input';
 import { Button } from '../components/common/Button';
 import clientService from '../services/clientService';
@@ -8,6 +9,7 @@ import toast from 'react-hot-toast';
 import { ArrowLeft } from 'lucide-react';
 
 export const ClientForm = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const isEdit = !!id;
@@ -39,7 +41,7 @@ export const ClientForm = () => {
         itpExpirationDate: client.itpExpirationDate.split('T')[0],
       });
     } catch (error) {
-      toast.error('Error loading client');
+      toast.error(t('clients.errorLoading'));
       navigate('/clients');
     }
   };
@@ -72,10 +74,10 @@ export const ClientForm = () => {
     try {
       if (isEdit) {
         await clientService.updateClient(id, submitData);
-        toast.success('Client updated successfully');
+        toast.success(t('clients.clientUpdated'));
       } else {
         await clientService.createClient(submitData);
-        toast.success('Client added successfully');
+        toast.success(t('clients.clientAdded'));
       }
       navigate('/clients');
     } catch (error) {
@@ -83,9 +85,9 @@ export const ClientForm = () => {
       if (error.response?.data) {
         console.error('Validation details:', error.response.data);
       }
-      const errorMessage = error.response?.data?.message || 'Error saving';
+      const errorMessage = error.response?.data?.message || t('clients.errorSaving');
       toast.error(errorMessage);
-      setErrors({ form: errorMessage }); // Show error in UI as well if possible, or just rely on toast
+      setErrors({ form: errorMessage });
     } finally {
       setLoading(false);
     }
@@ -101,57 +103,57 @@ export const ClientForm = () => {
           <ArrowLeft className="w-5 h-5" />
         </button>
         <h1 className="text-2xl font-bold text-gray-900">
-          {isEdit ? 'Edit Client' : 'New Client'}
+          {isEdit ? t('clients.editClient') : t('clients.newClient')}
         </h1>
       </div>
 
       <div className="card max-w-2xl">
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input
-            label="Name"
+            label={t('clients.name')}
             name="name"
             required
             value={formData.name}
             onChange={handleChange}
             error={errors.name}
-            placeholder="John Doe"
+            placeholder={t('clients.namePlaceholder')}
           />
 
           <Input
-            label="License Plate Number"
+            label={t('clients.licensePlateNumber')}
             name="licensePlate"
             required
             value={formData.licensePlate}
             onChange={handleChange}
             error={errors.licensePlate}
-            placeholder="B-123-ABC"
+            placeholder={t('clients.licensePlatePlaceholder')}
             className="uppercase"
           />
 
           <Input
-            label="Phone Number"
+            label={t('clients.phone')}
             name="phoneNumber"
             type="tel"
             required
             value={formData.phoneNumber}
             onChange={handleChange}
             error={errors.phoneNumber}
-            placeholder="+40722123456 or 0722123456"
+            placeholder={t('clients.phonePlaceholder')}
           />
 
           <Input
-            label="Email"
+            label={t('clients.email')}
             name="email"
             type="email"
             required
             value={formData.email}
             onChange={handleChange}
             error={errors.email}
-            placeholder="john.doe@example.com"
+            placeholder={t('clients.emailPlaceholder')}
           />
 
           <Input
-            label="ITP Expiration Date"
+            label={t('clients.itpExpirationDate')}
             name="itpExpirationDate"
             type="date"
             required
@@ -162,14 +164,14 @@ export const ClientForm = () => {
 
           <div className="flex gap-4">
             <Button type="submit" disabled={loading}>
-              {loading ? 'Saving...' : isEdit ? 'Update' : 'Add Client'}
+              {loading ? t('clients.saving') : isEdit ? t('clients.update') : t('clients.addClient')}
             </Button>
             <Button
               type="button"
               variant="secondary"
               onClick={() => navigate('/clients')}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
           </div>
         </form>

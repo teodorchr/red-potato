@@ -1,3 +1,5 @@
+import { getTranslations, interpolate } from '../locales/index.js';
+
 /**
  * Calculate the difference in days between two dates
  */
@@ -44,27 +46,46 @@ export const getEndOfDay = (date = new Date()) => {
 };
 
 /**
- * Generate ITP reminder message
+ * Generate ITP reminder message (SMS)
+ * @param {object} client - Client object
+ * @param {number} daysRemaining - Days until expiration
+ * @param {string} locale - Language code (ro, en, fr)
  */
-export const generateItpReminderMessage = (client, daysRemaining) => {
+export const generateItpReminderMessage = (client, daysRemaining, locale = 'ro') => {
   const { name, licensePlate, itpExpirationDate } = client;
   const formattedDate = formatDate(itpExpirationDate);
+  const t = getTranslations(locale).sms;
 
   if (daysRemaining <= 0) {
-    return `Hello ${name}! ITP for vehicle ${licensePlate} expired on ${formattedDate}. Please urgently schedule a new inspection at our service.`;
+    return interpolate(t.expired, { name, licensePlate, date: formattedDate });
   }
 
-  return `Hello ${name}! ITP for vehicle ${licensePlate} expires in ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} (${formattedDate}). Please schedule a new inspection at our service.`;
+  const daysWord = daysRemaining === 1 ? t.day : t.days;
+  return interpolate(t.reminder, {
+    name,
+    licensePlate,
+    days: daysRemaining,
+    daysWord,
+    date: formattedDate,
+  });
 };
 
 /**
  * Generate HTML template for email
+ * @param {object} client - Client object
+ * @param {number} daysRemaining - Days until expiration
+ * @param {string} locale - Language code (ro, en, fr)
  */
-export const generateEmailTemplate = (client, daysRemaining) => {
+export const generateEmailTemplate = (client, daysRemaining, locale = 'ro') => {
   const { name, licensePlate, itpExpirationDate } = client;
   const formattedDate = formatDate(itpExpirationDate);
   const urgency = daysRemaining <= 3 ? 'urgent' : 'normal';
   const color = urgency === 'urgent' ? '#ef4444' : '#f59e0b';
+  const t = getTranslations(locale).email;
+
+  const timeRemainingText = daysRemaining <= 0
+    ? t.expired
+    : `${daysRemaining} ${daysRemaining === 1 ? t.day : t.days}`;
 
   return `
 <!DOCTYPE html>
@@ -84,37 +105,49 @@ export const generateEmailTemplate = (client, daysRemaining) => {
 <body>
   <div class="container">
     <div class="header">
-      <h1>🚗 ITP Reminder</h1>
+      <h1>${t.title}</h1>
     </div>
     <div class="content">
-      <p>Hello <strong>${name}</strong>,</p>
+      <p>${t.greeting} <strong>${name}</strong>,</p>
 
       <div class="highlight">
-        <p>We inform you that the ITP for your vehicle:</p>
+        <p>${t.intro}</p>
         <ul>
-          <li><strong>Registration number:</strong> ${licensePlate}</li>
-          <li><strong>Expiration date:</strong> ${formattedDate}</li>
-          <li><strong>Time remaining:</strong> ${daysRemaining <= 0 ? 'EXPIRED' : `${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'}`}</li>
+          <li><strong>${t.registrationNumber}:</strong> ${licensePlate}</li>
+          <li><strong>${t.expirationDate}:</strong> ${formattedDate}</li>
+          <li><strong>${t.timeRemaining}:</strong> ${timeRemainingText}</li>
         </ul>
       </div>
 
       ${daysRemaining <= 0
-      ? '<p style="color: #ef4444; font-weight: bold;">⚠️ WARNING: Your ITP has expired! Driving with expired ITP is illegal and may result in penalties.</p>'
-      : '<p>Please schedule a new periodic technical inspection as soon as possible.</p>'
+      ? `<p style="color: #ef4444; font-weight: bold;">${t.warningExpired}</p>`
+      : `<p>${t.scheduleMessage}</p>`
     }
 
-      <p><strong>Service contact:</strong><br>
-      📞 Phone: 0722-XXX-XXX<br>
-      📧 Email: contact@serviceauto.ro</p>
+      <p><strong>${t.contactTitle}:</strong><br>
+      ${t.phone}: 0722-XXX-XXX<br>
+      ${t.email}: contact@serviceauto.ro</p>
 
-      <p>Best regards,<br>
-      <strong>Auto Service Team</strong></p>
+      <p>${t.regards},<br>
+      <strong>${t.team}</strong></p>
     </div>
     <div class="footer">
-      <p>This email was sent automatically. Please do not reply to this message.</p>
+      <p>${t.footer}</p>
     </div>
   </div>
 </body>
 </html>
   `;
+};
+
+/**
+ * Generate email subject
+ * @param {object} client - Client object
+ * @param {number} daysRemaining - Days until expiration
+ * @param {string} locale - Language code (ro, en, fr)
+ */
+export const generateEmailSubject = (client, daysRemaining, locale = 'ro') => {
+  const t = getTranslations(locale).email;
+  const template = daysRemaining <= 0 ? t.subjectExpired : t.subject;
+  return interpolate(template, { licensePlate: client.licensePlate });
 };
